@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+## 🩺 HealthPredict – Web Portal (Frontend)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The **HealthPredict Web Portal** is built with **React.js** to provide a user-friendly interface for doctors, patients, and admins to manage medical data, reports, and health insights efficiently.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+### ⚙️ Tech Stack
 
-### `npm start`
+* **Framework:** React 18
+* **Styling:** Tailwind CSS
+* **State Management:** React Hooks
+* **API Calls:** Axios
+* **Routing:** React Router DOM
+* **Build Tool:** Vite / CRA
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 📂 Project Structure
 
-### `npm test`
+```
+frontend/
+│
+├── public/                 # Public assets like index.html, favicon, logos
+│
+├── src/                    # All source code for the React app
+│   ├── api/                # API integration and Axios request handlers
+│   │   └── userApi.js      # Example: handles login, register, fetch users
+│   │
+│   ├── assets/             # Static images, icons, and other media
+│   │   └── logo.svg
+│   │
+│   ├── components/         # Reusable UI components (navbar, sidebar, cards, etc.)
+│   │   ├── Navbar.jsx
+│   │   ├── Sidebar.jsx
+│   │   └── ReportCard.jsx
+│   │
+│   ├── hooks/              # Custom React hooks (for logic reusability)
+│   │   └── useFetchData.js
+│   │
+│   ├── pages/              # Main application pages (routes)
+│   │   ├── LoginPage.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── PatientReports.jsx
+│   │   └── DoctorOverview.jsx
+│   │
+│   ├── App.js              # Main React component with routing setup
+│   ├── index.js            # Entry point – renders the app
+│   ├── index.css           # Global CSS styles
+│   ├── App.css             # App-specific styles
+│   └── reportWebVitals.js  # Performance metrics
+│
+├── package.json            # Project dependencies and scripts
+├── tailwind.config.js      # Tailwind CSS configuration
+├── postcss.config.js       # PostCSS setup
+├── .gitignore              # Files and folders ignored by Git
+└── README.md               # Project documentation
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+### 🚀 Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 1️⃣ Clone the Repository
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/sahansara/HealthPredict-webPortal.git
+cd HealthPredict-webPortal/webPortal
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 2️⃣ Install Dependencies
 
-### `npm run eject`
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### 3️⃣ Start Development Server
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 🧠 Key Functionalities
 
-## Learn More
+* Doctor and Admin dashboards
+* Medical report viewing and uploading
+* AI chatbot integration (coming soon)
+* Responsive UI with TailwindCSS
+* API communication with Laravel backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
