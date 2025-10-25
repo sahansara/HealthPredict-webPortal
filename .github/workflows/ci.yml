@@ -13,9 +13,29 @@ jobs:
   backend-tests:
     name: Laravel Backend Tests
     runs-on: ubuntu-latest
+    
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: healthpredict_test
+      DB_USERNAME: root
+      DB_PASSWORD: root_password
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: healthpredict_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
     defaults:
       run:
         working-directory: ./backend
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,22 +44,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, bcmath, curl, sqlite3
+          extensions: mbstring, xml, bcmath, curl, pdo_mysql
           coverage: none
       
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction --prefer-dist
       
-      - name: Create .env file
-        run: cp .env.example .env
-      
-      - name: Generate Laravel key
-        run: php artisan key:generate
-      
-      - name: Create SQLite database
+      - name: Create .env file for testing
         run: |
-          mkdir -p database
-          touch database/database.sqlite
+          cp .env.example .env
+          php artisan key:generate
+      
+      - name: Set database configuration for CI
+        run: |
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=healthpredict_test/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root_password/' .env
       
       - name: Run database migrations
         run: php artisan migrate --force
