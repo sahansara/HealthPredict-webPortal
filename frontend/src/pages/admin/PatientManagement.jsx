@@ -1,55 +1,65 @@
-import React, { useState } from 'react';
-import useDoctors from '../../hooks/Admin/useDoctor';
+import { useState } from 'react';
+import usePatients from '../../hooks/Admin/usePatients';
 import DataTable from '../../components/Admin/shared/DataTable';
 import RegistrationForm from '../../components/Admin/shared/RegistrationForm';
 import DeleteConfirmModal from '../../components/Admin/doctor/deleteconfirmModel';
-import { SPECIALIZATIONS } from '../../utils/Admin/doctorConstants';
+import { GENDER_OPTIONS, AGE_RANGES  } from '../../utils/Admin/doctorConstants';
 import DashboardLayout from '../../components/Admin/admin_dash/DashboardLayout';
 import EditModal from '../../components/Admin/shared/EditModal';
-import { doctorEditFields } from '../../utils/Admin/doctorFieldsConfig';
-import { validateDoctorForm } from '../../utils/Admin/Validations';
-import { doctorFormConfig } from '../../utils/Admin/formConfig';
-import { doctorTableColumns} from '../../utils/Admin/tableConfig';
-
-const DoctorManagement = () => {
+import { patientEditFields } from '../../utils/Admin/patientFieldsConfig';
+import { validatePatientForm } from '../../utils/Admin/Validations';
+import { patientFormConfig } from '../../utils/Admin/formConfig';
+import { patientTableColumns } from '../../utils/Admin/tableConfig';
+const PatientManagement = () => {
   
   const {
-    doctors,
+    patients,
     loading,
     error,
-    addDoctor,
-    editDoctor,
-    removeDoctor,
-    searchDoctors,
-    filterBySpecialization,
-  } = useDoctors();
+    addPatient,
+    editPatient,
+    removePatient,
+    searchPatients,
+    filterByGender,
+    filterByAgeRange,
+  } = usePatients();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSpecialization, setSelectedSpecialization] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedAgeRange, setSelectedAgeRange] = useState('');
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
-    doctorId: null,
-    doctorName: '',
+    patientId: null,
+    patientName: '',
   });
   const [notification, setNotification] = useState(null);
+
+
+  
 
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    searchDoctors(query);
+    searchPatients(query);
   };
 
-  const handleFilterChange = (e) => {
-    const specialization = e.target.value;
-    setSelectedSpecialization(specialization);
-    filterBySpecialization(specialization);
+  const handleGenderFilter = (e) => {
+    const gender = e.target.value;
+    setSelectedGender(gender);
+    filterByGender(gender);
   };
 
-  const handleAddDoctor = async (doctorData) => {
-    const result = await addDoctor(doctorData);
+  const handleAgeRangeFilter = (e) => {
+    const ageRange = e.target.value;
+    setSelectedAgeRange(ageRange);
+    filterByAgeRange(ageRange);
+  };
+
+  const handleAddPatient = async (patientData) => {
+    const result = await addPatient(patientData);
     if (result.success) {
       setShowAddForm(false);
       showNotification(result.message, 'success');
@@ -59,14 +69,14 @@ const DoctorManagement = () => {
     return result;
   };
 
-  const handleEdit = (doctorId) => {
-    const doctor = doctors.find(d => d.id === doctorId);
-    setSelectedDoctor(doctor);
+  const handleEdit = (patientId) => {
+    const patient = patients.find(p => p.id === patientId);
+    setSelectedPatient(patient);
     setShowEditModal(true);
   };
 
-  const handleEditSubmit = async (doctorData) => {
-    const result = await editDoctor(selectedDoctor.id, doctorData);
+  const handleEditSubmit = async (patientData) => {
+    const result = await editPatient(selectedPatient.id, patientData);
     if (result.success) {
       showNotification(result.message, 'success');
     } else {
@@ -75,23 +85,23 @@ const DoctorManagement = () => {
     return result;
   };
 
-  const handleDeleteClick = (doctorId) => {
-    const doctor = doctors.find((d) => d.id === doctorId);
+  const handleDeleteClick = (patientId) => {
+    const patient = patients.find((p) => p.id === patientId);
     setDeleteModal({
       isOpen: true,
-      doctorId,
-      doctorName: doctor?.full_name || 'this doctor',
+      patientId,
+      patientName: patient?.full_name || 'this patient',
     });
   };
 
   const handleDeleteConfirm = async () => {
-    const result = await removeDoctor(deleteModal.doctorId);
+    const result = await removePatient(deleteModal.patientId);
     if (result.success) {
       showNotification(result.message, 'success');
     } else {
       showNotification(result.message, 'error');
     }
-    setDeleteModal({ isOpen: false, doctorId: null, doctorName: '' });
+    setDeleteModal({ isOpen: false, patientId: null, patientName: '' });
   };
 
   const showNotification = (message, type) => {
@@ -122,7 +132,7 @@ const DoctorManagement = () => {
       )}
 
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Doctor Management</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Patient Management</h1>
         {!showAddForm && (
           <button
             onClick={() => setShowAddForm(true)}
@@ -131,7 +141,7 @@ const DoctorManagement = () => {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Add Doctor
+            Add Patient
           </button>
         )}
       </div>
@@ -144,9 +154,9 @@ const DoctorManagement = () => {
 
       {showAddForm ? (
         <RegistrationForm
-          type="Doctor"
-          fields={doctorFormConfig}
-          onSubmit={handleAddDoctor}
+          type="Patient"
+          fields={patientFormConfig}
+          onSubmit={handleAddPatient}
           onCancel={() => setShowAddForm(false)}
           loading={loading}
         />
@@ -154,14 +164,14 @@ const DoctorManagement = () => {
         <>
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-              <div className="md:col-span-8">
+              <div className="md:col-span-6">
                 <div className="relative">
                   <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
                     type="text"
-                    placeholder="Search doctors by name, email..."
+                    placeholder="Search patients by name, email, NIC..."
                     value={searchQuery}
                     onChange={handleSearch}
                     className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B69D4]"
@@ -171,14 +181,25 @@ const DoctorManagement = () => {
               <div className="md:col-span-1 text-right">
                 <span className="text-sm font-medium text-gray-700">Filter</span>
               </div>
-              <div className="md:col-span-3">
+              <div className="md:col-span-2">
                 <select
-                  value={selectedSpecialization}
-                  onChange={handleFilterChange}
+                  value={selectedGender}
+                  onChange={handleGenderFilter}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B69D4] bg-white"
                 >
-                  {SPECIALIZATIONS.map((spec) => (
-                    <option key={spec.value} value={spec.value}>{spec.label}</option>
+                  {GENDER_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="md:col-span-3">
+                <select
+                  value={selectedAgeRange}
+                  onChange={handleAgeRangeFilter}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B69D4] bg-white"
+                >
+                  {AGE_RANGES.map((range) => (
+                    <option key={range.value} value={range.value}>{range.label}</option>
                   ))}
                 </select>
               </div>
@@ -186,34 +207,34 @@ const DoctorManagement = () => {
           </div>
 
           <DataTable
-            data={doctors}
-            columns={doctorTableColumns}
+            data={patients}
+            columns={patientTableColumns}
             loading={loading}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
-            emptyMessage="No doctors found"
+            emptyMessage="No patients found"
           />
         </>
       )}
 
-      {/* Edit Modal */}
+      {/*Edit modal*/}
       <EditModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        data={selectedDoctor}
+        fields={patientEditFields}
+        data={selectedPatient}
         onSubmit={handleEditSubmit}
         loading={loading}
-        type="Doctor"
-        fields={doctorEditFields}
-        validateForm={validateDoctorForm}
-      />
+        type="Patient"
+        validateForm={validatePatientForm}
 
+      />
 
       <DeleteConfirmModal
         isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false, doctorId: null, doctorName: '' })}
+        onClose={() => setDeleteModal({ isOpen: false, patientId: null, patientName: '' })}
         onConfirm={handleDeleteConfirm}
-        doctorName={deleteModal.doctorName}
+        doctorName={deleteModal.patientName}
         loading={loading}
       />
     </div>
@@ -221,4 +242,4 @@ const DoctorManagement = () => {
   );
 };
 
-export default DoctorManagement;
+export default PatientManagement;

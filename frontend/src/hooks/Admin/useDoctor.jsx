@@ -3,7 +3,7 @@ import { getAllDoctors, registerDoctor, updateDoctor, deleteDoctor } from '../..
 
 /**
  * Custom hook for doctor management logic
- * Handles CRUD operations, search, and filtering
+ 
  */
 const useDoctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -75,40 +75,50 @@ const useDoctors = () => {
    * Update existing doctor
    */
   const editDoctor = async (id, doctorData) => {
-    setLoading(true);
-    setError(null);
+  setLoading(true);
+  setError(null);
 
-    try {
-      const formData = new FormData();
+  try {
+    const formData = new FormData();
+    
+    // Append all doctor data to FormData
+    Object.keys(doctorData).forEach((key) => {
+      const value = doctorData[key];
       
-      // Append all doctor data to FormData
-      Object.keys(doctorData).forEach((key) => {
-        // Only append if value exists and is not null/undefined
-        if (doctorData[key] !== null && doctorData[key] !== undefined) {
-          // Skip profile_picture if it's null (no new image selected)
-          if (key === 'profile_picture' && doctorData[key] === null) {
-            return;
-          }
-          formData.append(key, doctorData[key]);
-        }
-      });
-
-      const result = await updateDoctor(id, formData);
-
-      if (result.success) {
-        await fetchDoctors(); // Refresh the list
-        return { success: true, message: result.message };
-      } else {
-        return { success: false, message: result.message, errors: result.errors };
+      // Skip if value is null or undefined
+      if (value === null || value === undefined) {
+        return;
       }
-    } catch (err) {
-      console.error('Edit doctor error:', err);
-      return { success: false, message: 'Failed to update doctor.' };
-    } finally {
-      setLoading(false);
-    }
-  };
+      
+      // Special handling for profile_picture
+      if (key === 'profile_picture') {
+        // If it's a File object (new upload), append it
+        if (value instanceof File) {
+          formData.append(key, value);
+        }
+       
+        return;
+      }
+      
+      // Append all other fields
+      formData.append(key, value);
+    });
 
+    const result = await updateDoctor(id, formData);
+
+    if (result.success) {
+      await fetchDoctors(); // Refresh the list
+      return { success: true, message: result.message };
+    } else {
+      return { success: false, message: result.message, errors: result.errors };
+    }
+  } catch (err) {
+    console.error('Edit doctor error:', err);
+    return { success: false, message: 'Failed to update doctor.' };
+  } finally {
+    setLoading(false);
+  }
+};
   /**
    * Delete doctor
    */

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/admin/Dashborad' 
 import DoctorManagement from './pages/admin/DoctorManagement';
+import PatientManagement from './pages/admin/PatientManagement';
 
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
 
         <Route path="/admin/dashboard" element={<Dashboard/>} /> 
         <Route path="/admin/doctors" element={<DoctorManagement />} />
-        {/* <Route path="/admin/doctor/:id" element={<DoctorDetailsPage />} />  */}
+        <Route path='/admin/patients' element={<PatientManagement/>} />
         
         
 

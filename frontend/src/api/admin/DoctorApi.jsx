@@ -75,7 +75,15 @@ export const registerDoctor = async (doctorData) => {
 
 export const updateDoctor = async (id, doctorData) => {
   try {
-    const response = await authApi.put(`/admin/doctor/update/${id}`, doctorData);
+    // Add _method field to the FormData to simulate PUT request
+    doctorData.append('_method', 'PUT');
+    
+    const response = await authApi.post(`/admin/doctor/update/${id}`, doctorData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
     return {
       success: true,
       data: response.data,
@@ -103,6 +111,8 @@ export const deleteDoctor = async (id) => {
       message: response.data.message || 'Doctor deleted successfully!',
     };
   } catch (error) {
+    console.error('deleteDoctor error:', error);
+    console.error('deleteDoctor error response:', error.response?.data);
     return {
       success: false,
       message: error.response?.data?.message || 'Failed to delete doctor.',

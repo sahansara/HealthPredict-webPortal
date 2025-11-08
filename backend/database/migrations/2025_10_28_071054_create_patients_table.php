@@ -13,20 +13,23 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('national_id')->unique();
+             $table->foreignId('role_id')->constrained('role')->onDelete('cascade');
+            $table->string('full_name');
             $table->date('date_of_birth');
             $table->string('gender');
             $table->string('address');
-            $table->string('phone_number');
+            $table->string('phone');
             $table->string('age');
             $table->string('password');
-            $table->foreignId('role_id')->constrained('role')->onDelete('cascade');
-            $table->string('profile_image')->nullable();
-            $table->string('national_id')->unique();
+           
+            $table->string('profile_picture')->nullable();
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            
             $table->rememberToken();
             $table->timestamps();
-        });
+        }); 
     }
 
     /**

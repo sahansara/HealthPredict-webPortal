@@ -23,9 +23,7 @@ class Doctor extends Authenticatable implements MustVerifyEmail
         'role_id'
     ];
     
-    //primary key
-    protected $primaryKey = 'dr_id';
-    
+
 
 
      // Automatically append this to JSON responses
@@ -63,10 +61,6 @@ class Doctor extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public static function doctorCount()
-    {
-        return self::count();
-    }
 
     
     public function patients()
